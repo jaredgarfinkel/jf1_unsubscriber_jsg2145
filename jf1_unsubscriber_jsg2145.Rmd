@@ -1,0 +1,107 @@
+---
+title: "jf1_unsubscriber_jsg2145"
+author: "Jared Garfinkel"
+date: "8/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(rvest)
+library(httr)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+```
+
+```{r}
+url = "https://www.actionnetwork.org/subscriptions"
+
+# anorg_html = GET(url)
+# anorg_html
+# warn_for_status(html_session(url))
+# 
+# subs = anorg_html %>% 
+#   html_nodes(".subscription_name span span") %>% 
+#   html_text()
+# 
+# anorg_sess = html_session(url) %>% 
+#   follow_link(css = ".no_icon:nth-child(1) .js-fancylink")
+# .subscription_name
+# .clearfix
+# .js-fancylink
+# .no_icon:nth-child(1) .js-fancylink
+```
+
+```{r}
+# url2 = "https://www.actionnetwork.org/dashboard"
+# 
+# anorg_html2 = GET(url2)
+# 
+# anorg2 = html(url2)
+# 
+# text = anorg2 %>% 
+#   html_nodes("#navatar_wrap div div") %>% 
+#   html_text()
+# 
+# anorg2_ss = html_session(url2) %>% 
+#   follow_link(css = "#navatar_wrap")
+# 
+# subs = anorg2 %>% 
+#   html_nodes("#navatar_wrap")
+```
+
+```{r}
+url3 = "https://www.actionnetwork.org/users/sign_in"
+
+anorg3_sess = html_session(url3)
+
+anorgform = html_form(anorg3_sess)[[1]]
+
+filled_form <- set_values(anorgform, "user[email]"="jared.garfinkel@gmail.com", "user[password]"="6z!FWcFgv9CBPXv")
+
+submit_form(anorg3_sess, filled_form)
+
+s = anorg3_sess %>%
+  jump_to(url)
+
+t = s %>% 
+  html_nodes(".subscription_name") %>% 
+  html_text()
+
+
+u = NULL
+for (i in 1:length(t)) {
+  u[[i]] = s %>% html_nodes(paste0(".no_icon:nth-child(", i, ") .js-fancylink")) %>% html_attrs()
+}
+v = NULL
+for (i in 1:length(u)) {
+  v[[i]] = s %>% jump_to(paste0(url, u[[i]][[1]][["href"]]))
+}
+w = NULL
+for (i in 1:length(v)) {
+  w[[i]] = html_form(v[[1]])[[i]]
+}
+
+x = NULL
+for (i in 1:length(w)) {
+  submit_form(v[[i]], w[[i]], submit = "commit")
+}
+# 
+# 
+# u[[170]][[1]][["href"]]
+# html_attrs(u[[1]])[[1]][["class"]]
+# u[[1]]
+# <a href="#unsubscribe_modal4288845" class="subscription_list_button button lined_button button_red fancylink js-fancylink">Unsubscribe</a>
+```
