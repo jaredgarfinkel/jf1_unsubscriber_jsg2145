@@ -65,7 +65,7 @@ url = "https://www.actionnetwork.org/subscriptions"
 ```{r}
 url3 = "https://www.actionnetwork.org/users/sign_in"
 
-anorg3_sess = html_session(url3)
+anorg3_sess = session(url3)
 
 anorgform = html_form(anorg3_sess)[[1]]
 

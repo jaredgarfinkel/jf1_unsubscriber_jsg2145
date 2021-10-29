@@ -63,37 +63,145 @@ url = "https://www.actionnetwork.org/subscriptions"
 ```
 
 ```{r}
-url3 = "https://actionnetwork.org/users/sign_in"
+url3 = "https://www.actionnetwork.org/users/sign_in"
 
 anorg3_sess = session(url3)
 
+?session
+
+# anorg3_sess
+
+# anorg3_sess %>%
+#   read_html()
+# anorg3_sess %>% 
+#   html_element("#ipt-login") %>% 
+#   html_form()
+
+# ?html_form
+# 
 # anorg3_sess %>% 
 #   read_html()
+# 
+# read_html(url3) %>% 
+#   html_form() %>% 
+#   .[[1]]
 
-# anorg3_sess_signin = anorg3_sess %>%
-#   # session_follow_link("#header_login")
-#   html_elements("#header_login") %>% 
-#   html_text()
-  # # session_
-  # session_follow_link()
-
-# anorg3_signin = anorg3_sess %>% 
-#   session_follow_link(anorg3_sess_signin)
-
-anorg3_sess
-
+ # ?read_html
 anorgform = html_form(anorg3_sess)[[1]]
+# 
+# read_html(anorg3_sess) %>% 
+#   html_attr("#ipt-login")
+# 
+# html = read_html(url3)
+# 
+# ?html_form
 
-filled_form <- html_form_set(anorgform, "user[email]"="jared.garfinkel@gmail.com", "user[password]"="6z!FWcFgv9CBPXv")
+# form3 = html_form(html)[[1]]
+# 
+# # html_text(html)
+# 
+# ?POST
+# 
+# get = GET(url3)
+# 
+# class(get)
+# class(anorg3_sess)
+# class(html)
+# 
+# html %>% 
+#   html_elements("form")
+# 
+# html %>% 
+#   html_elements("body")
+# 
+# html %>% 
+#   html_elements("method")
+# 
+# anorg3_sess %>% 
+#   html_elements("input") %>% 
+#   html_text2() # blank
+# 
+# anorg3_sess %>% 
+#   html_elements("head") %>% 
+#   html_attrs()
+# 
+# anorg3_sess %>% 
+#   html_elements("input") %>% 
+#   html_attr("type") # weird stuff
+# 
+# anorg3_sess %>% 
+#   html_elements("type") #blank
+#   # html_attrs() # blank
+# 
+# ?html_element
+##
+# anorgform["fields"][[1]]["mac_addr"][[1]]$value # "c0:e4:34:7d:a1:55"
+# 
+# anorgform["fields"][[1]]["url"][[1]]$value # "http://www.actionnetwork.org/users/sign_in"
+# 
+# anorgform["fields"][[1]]["reason"][[1]]$value # "1"
+# 
+# anorgform["fields"][[c(1, 4)]]$value # "0"
+##
+# html_attr(anorgform)
 
-submit_form(anorg3_sess, filled_form)
+# ?html_attrs
+
+# anorg3_sess %>% 
+#   read_html() %>% 
+#   html_form()
+
+# anorgform[5]$fields$reason
+
+# ?html_form_set
+
+filled_form <- html_form_set(anorgform, 
+                             "mac_addr" = "c0:e4:34:7d:a1:55",
+                             "url" = "http://www.actionnetwork.org/users/sign_in",
+                             "reason" = "1", "0")
+
+# filled_form <- anorgform %>% 
+#   html_form_set("input" = "jacquelynjoan@gmail.com", "hidden"="Goldman222!")
+
+session_submit(anorg3_sess, filled_form)
 
 s = anorg3_sess %>%
   jump_to(url)
 
-t = s %>% 
-  html_nodes(".subscription_name") %>% 
-  html_text()
+# class(s)
+# 
+# s
+
+# s %>% 
+#   # html_text() # doesn't work
+#   # read_html() %>% # not what I want
+#   html_elements(".subscription_name") %>% 
+#   html_text()
+
+m = html_form(s)[[1]]
+
+# m["fields"][[1]]["mac_addr"][[1]]$value # "c0:e4:34:7d:a1:55"
+# 
+# m["fields"][[1]]["url"][[1]]$value # "http://www.actionnetwork.org/subscriptions"
+# 
+# m["fields"][[1]]["reason"][[1]]$value # "1"
+# 
+# m["fields"][[c(1, 4)]]$value # "0"
+
+filled_form2 = html_form_set(anorgform, 
+                             "mac_addr" = "c0:e4:34:7d:a1:55",
+                             "url" = "https://www.actionnetwork.org/subscriptions",
+                             "reason" = "1", "0")
+
+session_submit(s, filled_form2)
+
+s
+
+n = s %>% 
+  jump_to("https://www.actionnetwork.org/subscriptions")
+
+# n %>% 
+#   html_elements(".subscription_name")
 
 
 u = NULL
